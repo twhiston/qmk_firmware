@@ -14,7 +14,8 @@ enum custom_layers {
 enum custom_keycodes {
   PLACEHOLDER = SAFE_RANGE, // can always be here
   EPRM,
-  VRSN
+  VRSN,
+  CHTSHT
 };
 
 
@@ -76,7 +77,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Programmer
  *
  * ,---------------------------------------------------.           ,--------------------------------------------------.
- * |     ~   |  !   |  @   |  £   |  $   |  %   |      |           |      |  ^   |  &   |  *   |  (   |  )   |        |
+ * |         |  !   |  @   |  £   |  $   |  %   |      |           |      |  ^   |  &   |  *   |  (   |  )   |        |
  * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
  * |         |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -84,10 +85,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * |         |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * `---------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |       |      |      |      |      |                                       |      |      |      |      |      |
+ *   |       |      |  ~   |      |      |                                       |      |      |      |      |      |
  *   `-----------------------------------'                                       `----------------------------------'
  *                                       ,-------------.           ,-------------.
- *                                       |      |      |           |      |      |
+ *                                       |      |ChtSht|           |      |      |
  *                                ,------|------|------|           |------+------+------.
  *                                |      |      |      |           |      |      |      |
  *                                |      |      |------|           |------|      |      |
@@ -96,13 +97,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_PROGRAMMER] = LAYOUT_ergodox(
   // left hand
-  KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_TRNS,
+  KC_TRNS, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_TRNS, KC_TRNS, KC_TILD, KC_TRNS, KC_TRNS,
 
-                                               KC_TRNS, KC_TRNS,
+                                               KC_TRNS, CHTSHT,
                                                         KC_TRNS,
                                       KC_TRNS, KC_TRNS, KC_TRNS,
 
@@ -266,7 +267,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case VRSN:
                 SEND_STRING (QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
                 return false; break;
+            case CHTSHT:
+              register_code(KC_LSHIFT);
+              register_code(KC_LGUI);
+              register_code(KC_SLASH);
+              unregister_code(KC_SLASH);
+              unregister_code(KC_LGUI);
+              unregister_code(KC_LSHIFT);
+              return false; break;
         }
+
     }
     return true;
 };
