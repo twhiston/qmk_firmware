@@ -1,6 +1,7 @@
 # project specific files
 SRC =	matrix.c \
-	led.c
+	led.c \
+	$(CHIBIOS)/os/various/syscalls.c
 
 ## chip/board settings
 # - the next two should match the directories in
