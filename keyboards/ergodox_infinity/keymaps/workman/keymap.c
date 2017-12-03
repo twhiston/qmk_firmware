@@ -77,7 +77,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Programmer
  *
  * ,---------------------------------------------------.           ,--------------------------------------------------.
- * |         |  !   |  @   |  £   |  $   |  %   |      |           |      |  ^   |  &   |  *   |  (   |  )   |        |
+ * |         |  !   |  @   |  £   |  $   |  %   |ChtSht|           |      |  ^   |  &   |  *   |  (   |  )   |        |
  * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
  * |         |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -88,7 +88,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *   |       |      |  ~   |      |      |                                       |      |      |      |      |      |
  *   `-----------------------------------'                                       `----------------------------------'
  *                                       ,-------------.           ,-------------.
- *                                       |      |ChtSht|           |      |      |
+ *                                       |      | CLIP |           |      |      |
  *                                ,------|------|------|           |------+------+------.
  *                                |      |      |      |           |      |      |      |
  *                                |      |      |------|           |------|      |      |
@@ -97,13 +97,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_PROGRAMMER] = LAYOUT_ergodox(
   // left hand
-  KC_TRNS, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_TRNS,
+  KC_TRNS, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, CHTSHT,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TILD, KC_TRNS, KC_TRNS,
 
-                                               KC_TRNS, CHTSHT,
+                                               KC_TRNS, LGUI(KC_M),
                                                         KC_TRNS,
                                       KC_TRNS, KC_TRNS, KC_TRNS,
 
