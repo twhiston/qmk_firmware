@@ -23,46 +23,46 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic Workman layer
  *
  * ,---------------------------------------------.           ,--------------------------------------------.
- * |   Esc    |  1  |  2  |  3  |  4  |  5  | Esc|           | Esc  |  6  |  7  |  8  |  9  |  0  |   -    |
+ * |   Esc    |  1  |  2  |  3  |  4  |  5  |Util|           | Util |  6  |  7  |  8  |  9  |  0  |   -    |
  * |--------+-----+-----+-----+-----+------------|           |------+-----+-----+-----+-----+-----+--------|
  * |  Tab   |  Q  |  D  |  R  |  W  |  B  |  [{  |           |  ]}  |  J  |  F  |  U  |  P  |  '  |   =    |
  * |--------+-----+-----+-----+-----+-----|      |           |      |-----+-----+-----+-----+-----+--------|
  * |  BSPC  |  A  |  S  |  H  |  T  |  G  |------|           |------|  Y  |  N  |  E  |  O  |  I  |   ;    |
  * |--------+-----+-----+-----+-----+-----|Enter |           |Enter |-----+-----+-----+-----+-----+--------|
- * | LShift |  Z  |  X  |  M  |  C  |  V  |      |           |      |  K  |  L  |  ,  |  .  |  /  | RAlt   |
+ * | LGUI   |  Z  |  X  |  M  |  C  |  V  |      |           |      |  K  |  L  |  ,  |  .  |  /  |  RGui  | 
  * `--------+-----+-----+-----+-----+------------'           `------------+-----+-----+-----+-----+--------'
- *   | LGUI |LCtrl|  `  |  \  |  -  |                                      |Left| Up  |Down |Right|RGui |
- *   `------------------------------'                                      `----------------------------'
- *                                   ,------------.          ,------------.
- *                                   |LAlt |LUtil |          | Hyper|RCtl |
+ *   |LShft |LCtrl|  `  |  \  |  -  |                                     |Hyper| Pgup|PgDn |RCtrl|Lshft|
+ *   `------------------------------'                                     `-----------------------------'
+ *                                   ,------------.          ,------------.                  
+ *                                   |Lprog|LNum  |          | Left |Right|
  *                              ,----|-----|------|          |------+-----+-----.
- *                             |    |     | Home  |          | PgUp |     |     |
- *                            |Space|LProg|-------|          |------|LNum |Space|
- *                             |    |     | End   |          | PgDn |     |     |
+ *                             |    |      | Home |          | Up   |     |     |
+ *                            |Space|LAlt  |------|          |------|Ralt |Space|
+ *                             |    |      | End  |          | Down |     |     |
  *                              `-----------------'          `------------------'
  */
 [_WORKMAN] = LAYOUT_ergodox(
   // left hand
-  KC_ESC,     KC_1,    KC_2,    KC_3,    KC_4,     KC_5,             KC_ESC,
-  KC_TAB,     KC_Q,    KC_D,    KC_R,    KC_W,     KC_B,             KC_LBRACKET,
-  KC_BSPACE,  KC_A,    KC_S,    KC_H,    KC_T,     KC_G,
-  KC_LSPO,    KC_Z,    KC_X,    KC_M,    KC_C,     KC_V,             KC_ENTER,
-  KC_LGUI,    KC_LCTL, KC_GRV,  KC_BSLS, KC_MINUS,
+  KC_ESC,       KC_1,    KC_2,    KC_3,    KC_4,     KC_5,            TG(_UTILITY),
+  KC_TAB,       KC_Q,    KC_D,    KC_R,    KC_W,     KC_B,            KC_LBRACKET,
+  KC_BSPACE,    KC_A,    KC_S,    KC_H,    KC_T,     KC_G,
+  OSM(MOD_LGUI),KC_Z,    KC_X,    KC_M,    KC_C,     KC_V,            KC_ENTER,
+  KC_LSPO,      KC_LCTL, KC_GRV,  KC_BSLS, KC_MINUS,
 
-                                                  KC_LALT,           TG(_UTILITY),
-                                                                     KC_HOME,
-                                          KC_SPACE, TG(_PROGRAMMER), KC_END,
+                                                   TG(_PROGRAMMER), TG(_NUM),
+                                                                    KC_HOME,
+                                         KC_SPACE, KC_LALT,         KC_END,
 
   // right hand
-  KC_ESC,      KC_6, KC_7,    KC_8,    KC_9,    KC_0,           KC_MINUS,
-  KC_RBRACKET, KC_J, KC_F,    KC_U,    KC_P,    KC_QUOT,        KC_EQUAL,
-               KC_Y, KC_N,    KC_E,    KC_O,    KC_I,           KC_SCOLON,
-  KC_ENTER,    KC_K, KC_L,    KC_COMM, KC_DOT,  KC_SLASH,       KC_RALT,
-                     KC_LEFT, KC_UP,   KC_DOWN, KC_RIGHT,       KC_RGUI,
+  TG(_UTILITY),KC_6, KC_7,            KC_8,    KC_9,    KC_0,     KC_MINUS,
+  KC_RBRACKET, KC_J, KC_F,            KC_U,    KC_P,    KC_QUOT,  KC_EQUAL,
+               KC_Y, KC_N,            KC_E,    KC_O,    KC_I,     KC_SCOLON,
+  KC_ENTER,    KC_K, KC_L,            KC_COMM, KC_DOT,  KC_SLASH, KC_RGUI,
+                     KC_KP_ASTERISK,  KC_PGUP, KC_PGDN, KC_RCTL,  KC_RSPC,
 
-  KC_KP_ASTERISK,  KC_RCTL,
-  KC_PGUP,
-  KC_PGDN,         TG(_NUM), KC_SPACE
+  KC_LEFT, KC_RIGHT,
+  KC_UP,
+  KC_DOWN, KC_RALT, KC_SPACE
 ),
 
 /* Programmer
