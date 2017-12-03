@@ -17,7 +17,7 @@ enum custom_keycodes {
   VRSN
 };
 
-
+extern void update_lcd(void);
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic Workman layer
@@ -160,11 +160,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,---------------------------------------------------.           ,--------------------------------------------------.
  * | Version |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
- * |         |      |      |      |      |BL_INC|      |           |      |      |BL_INC|      |      |      |        |
+ * |         |      |      |      |      |BL_INC|      |           |      |BL_INC|      |      |      |      |        |
  * |---------+------+------+------+------+------| RESET|           |RESET |------+------+------+------+------+--------|
- * |         |      |      |      |      |BL_DEC|------|           |------|      |BL_DEC|      |      |      |        |
+ * |         |      |      |      |      |BL_DEC|------|           |------|BL_DEC|      |      |      |      |        |
  * |---------+------+------+------+------+------| DEBUG|           |      |------+------+------+------+------+--------|
- * |         |      |      |      |      |BL_TOG|      |           |DEBUG |      |BL_TOG|      |      |      |        |
+ * |         |      |      |      |      |BL_TOG|      |           |DEBUG |BL_TOG|      |      |      |      |        |
  * `---------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
  *   |       |      |      |      |      |                                       |      |      |      |      |      |
  *   `-----------------------------------'                                       `----------------------------------'
@@ -247,6 +247,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
+bool hyperActive = false;
+uint8_t oldLayer = 255;
+char* oldLayerName = "";
+char* layerName = "";
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
         switch(keycode) {
@@ -274,20 +278,29 @@ void matrix_init_user(void) {
 void matrix_scan_user(void) {
   uint8_t layer = biton32(layer_state);
 
-  ergodox_led_all_off();
-
-  switch (layer) {
-    case _WORKMAN:
-       ergodox_right_led_1_on();
+  if (layer != oldLayer) {
+    oldLayer = layer;
+    ergodox_led_all_off();
+    switch (layer) {
+      case _WORKMAN:
+        layerName = "Workman";
+        ergodox_right_led_1_on();
       break;
-    case _PROGRAMMER:
-      ergodox_right_led_2_on();
+      case _PROGRAMMER:
+        layerName = "Programmer";
+        ergodox_right_led_2_on();
       break;
-    case _NUM:
-      ergodox_board_led_off();
+      case _NUM:
+        layerName = "NumPad";
+        ergodox_board_led_off();
       break;
-    case _UTILITY:
-      ergodox_right_led_3_on();
+      case _UTILITY:
+        layerName = "Utility";
+        ergodox_right_led_3_on();
       break;
+    }
   }
+
+  
+
 };

@@ -45,6 +45,8 @@ static const uint32_t led_emulation_colors[4] = {
 
 static uint32_t next_led_target_color = 0;
 
+extern char* layerName;
+
 typedef enum {
     LCD_STATE_INITIAL,
     LCD_STATE_LAYER_BITMAP,
@@ -58,7 +60,6 @@ typedef struct {
     uint8_t led1;
     uint8_t led2;
     uint8_t led3;
-    uint8_t led4;
 } visualizer_user_data_t;
 
 // Don't access from visualization function, use the visualizer state instead
@@ -79,7 +80,7 @@ _Static_assert(sizeof(visualizer_user_data_t) <= VISUALIZER_USER_DATA_SIZE,
 static keyframe_animation_t one_led_color = {
     .num_frames = 1,
     .loop = false,
-    .frame_lengths = {gfxMillisecondsToTicks(0)},
+    .frame_lengths = {gfxMillisecondsToTicks(100)},
     .frame_functions = {lcd_backlight_keyframe_set_color},
 };
 
@@ -98,20 +99,57 @@ static keyframe_animation_t two_led_colors = {
     .frame_functions = {lcd_backlight_keyframe_set_color, swap_led_target_color},
 };
 
+// static void format_layer_bitmap_string_tom(uint16_t default_layer, uint16_t layer, char* buffer) {
+//     for (int i=0; i<16;i++)
+//     {
+//         uint32_t mask = (1u << i);
+//         if (default_layer & mask) {
+//             if (layer & mask) {
+//                 *buffer = 'B';
+//             } else {
+//                 *buffer = 'D';
+//             }
+//         } else if (layer & mask) {
+//             *buffer = '1';
+//         } else {
+//             *buffer = '0';
+//         }
+//         ++buffer;
+
+//         if (i==3 || i==7 || i==11) {
+//             *buffer = ' ';
+//             ++buffer;
+//         }
+//     }
+//     *buffer = 0;
+// }
+
+bool lcd_keyframe_display_layer_bitmap_tom(keyframe_animation_t* animation, visualizer_state_t* state) {
+    (void)animation;
+    //char layer_buffer[16 + 4]; // 3 spaces and one null terminator
+    gdispClear(White);
+    gdispDrawString(0, 0, layerName, state->font_dejavusansbold12, Black);
+    //format_layer_bitmap_string_tom(state->status.default_layer, state->status.layer, layer_buffer);
+    //gdispDrawString(0, 10, layer_buffer, state->font_fixed5x8, Black);
+    //format_layer_bitmap_string_tom(state->status.default_layer >> 16, state->status.layer >> 16, layer_buffer);
+    //gdispDrawString(0, 20, layer_buffer, state->font_fixed5x8, Black);
+    return false;
+}
+
 // The LCD animation alternates between the layer name display and a
 // bitmap that displays all active layers
 static keyframe_animation_t lcd_bitmap_animation = {
     .num_frames = 1,
     .loop = false,
-    .frame_lengths = {gfxMillisecondsToTicks(0)},
-    .frame_functions = {lcd_keyframe_display_layer_bitmap},
+    .frame_lengths = {gfxMillisecondsToTicks(100)},
+    .frame_functions = {lcd_keyframe_display_layer_bitmap_tom},
 };
 
 static keyframe_animation_t lcd_bitmap_leds_animation = {
     .num_frames = 2,
     .loop = true,
     .frame_lengths = {gfxMillisecondsToTicks(2000), gfxMillisecondsToTicks(2000)},
-    .frame_functions = {lcd_keyframe_display_layer_bitmap, lcd_keyframe_display_led_states},
+    .frame_functions = {lcd_keyframe_display_layer_bitmap_tom, lcd_keyframe_display_led_states},
 };
 
 void initialize_user_visualizer(visualizer_state_t* state) {
@@ -295,11 +333,6 @@ void ergodox_right_led_3_on(void){
     visualizer_set_user_data(&user_data_keyboard);
 }
 
-void ergodox_right_led_4_on(void){
-    user_data_keyboard.led_on |= (1u << 3);
-    visualizer_set_user_data(&user_data_keyboard);
-}
-
 void ergodox_board_led_off(void){
     // No board led support
 }
@@ -336,10 +369,5 @@ void ergodox_right_led_2_set(uint8_t n) {
 
 void ergodox_right_led_3_set(uint8_t n) {
     user_data_keyboard.led3 = n;
-    visualizer_set_user_data(&user_data_keyboard);
-}
-
-void ergodox_right_led_4_set(uint8_t n) {
-    user_data_keyboard.led4 = n;
     visualizer_set_user_data(&user_data_keyboard);
 }
