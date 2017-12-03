@@ -17,7 +17,15 @@ enum custom_keycodes {
   VRSN
 };
 
-extern void update_lcd(void);
+
+char *layerNames[] = {
+  [_WORKMAN]="Workman",
+  [_NUM]="NumPad",
+  [_PROGRAMMER]="Programmer",
+  [_FUNCTION]="Function",
+  [_UTILITY]="Utility"
+};
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic Workman layer
@@ -113,7 +121,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Function
  *
  * ,---------------------------------------------------.           ,--------------------------------------------------.
- * |         |  F1  |  F2  |  F3  |  F4  |  F5  |  F11 |           |  F12 |  F6  |  F7  |  F8  |  F9  |  F10 |        |
+ * |   F11   |  F1  |  F2  |  F3  |  F4  |  F5  |      |           |      |  F6  |  F7  |  F8  |  F9  |  F10 |   F12  |
  * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
  * |         |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -133,7 +141,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_FUNCTION] = LAYOUT_ergodox(
   // left hand
-  KC_TRNS, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F11,
+  KC_F11, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,    KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
@@ -144,7 +152,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                       KC_TRNS, KC_TRNS, KC_TRNS,
 
   // right hand
-  KC_F12,  KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_TRNS,
+  KC_TRNS,  KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
            KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
@@ -158,7 +166,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Utility
  *
  * ,---------------------------------------------------.           ,--------------------------------------------------.
- * | Version |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
+ * | Version |      |      |      |      |      | Util |           | Util |      |      |      |      |      |        |
  * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
  * |         |      |      |      |      |BL_INC|      |           |      |BL_INC|      |      |      |      |        |
  * |---------+------+------+------+------+------| RESET|           |RESET |------+------+------+------+------+--------|
@@ -169,7 +177,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *   |       |      |      |      |      |                                       |      |      |      |      |      |
  *   `-----------------------------------'                                       `----------------------------------'
  *                                       ,-------------.           ,-------------.
- *                                       |      | LUtil|           |      |      |
+ *                                       |      |      |           |      |      |
  *                                ,------|------|------|           |------+------+------.
  *                                |      |      |      |           |      |      |      |
  *                                |      |      |------|           |------|      |      |
@@ -178,22 +186,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_UTILITY] = LAYOUT_ergodox(
   // left hand
-  VRSN,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,   KC_NO,
+  VRSN,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,   TG(_UTILITY),
   KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, BL_INC,  RESET,
   KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, BL_DEC,
   KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, BL_TOGG, DEBUG,
   KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
 
-                                     KC_NO,   TG(_UTILITY),
+                                     KC_NO,   KC_NO,
                                               KC_NO,
                               KC_NO, KC_NO,   KC_NO,
 
   // right hand
-  KC_NO, KC_NO,   KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-  RESET, BL_INC,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-         BL_DEC,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-  DEBUG, BL_TOGG, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+  TG(_UTILITY), KC_NO,   KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+  RESET,        BL_INC,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+                BL_DEC,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+  DEBUG,        BL_TOGG, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+                         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
 
   KC_NO, KC_NO,
   KC_NO,
@@ -247,9 +255,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
-bool hyperActive = false;
 uint8_t oldLayer = 255;
-char* oldLayerName = "";
 char* layerName = "";
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
@@ -281,26 +287,20 @@ void matrix_scan_user(void) {
   if (layer != oldLayer) {
     oldLayer = layer;
     ergodox_led_all_off();
+    layerName = layerNames[layer];
     switch (layer) {
       case _WORKMAN:
-        layerName = "Workman";
         ergodox_right_led_1_on();
       break;
       case _PROGRAMMER:
-        layerName = "Programmer";
         ergodox_right_led_2_on();
       break;
       case _NUM:
-        layerName = "NumPad";
         ergodox_board_led_off();
       break;
       case _UTILITY:
-        layerName = "Utility";
         ergodox_right_led_3_on();
       break;
     }
   }
-
-  
-
 };
