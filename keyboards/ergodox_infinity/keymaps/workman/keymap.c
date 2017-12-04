@@ -26,6 +26,88 @@ char *layerNames[] = {
   [_UTILITY]="Utility"
 };
 
+// TAPDANCE
+
+// Enums
+// TD_CPX
+// copy / paste / cut button
+//
+// TD_UNDO_CHMP
+// cmd+z / select previous and delete / shift+cmd+z
+enum {
+ TD_CPX = 0,
+ TD_UNDO_CHMP
+};
+
+void dance_cpx_finished (qk_tap_dance_state_t *state, void *user_data) {
+
+  if (state->count == 1) {
+    register_code(KC_LGUI);
+    register_code(KC_C);
+  } else if (state->count == 2)  {
+    register_code(KC_LGUI);
+    register_code(KC_V);
+  } else if (state->count == 3)  {
+    register_code(KC_LGUI);
+    register_code(KC_X);
+  }
+}
+
+void dance_cpx_reset (qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    unregister_code(KC_LGUI);
+    unregister_code(KC_C);
+  } else if (state->count == 2) {
+    unregister_code(KC_LGUI);
+    unregister_code(KC_V);
+  } else if (state->count == 3)  {
+    unregister_code(KC_LGUI);
+    unregister_code(KC_X);
+  }
+}
+
+void dance_undo_cmp_finished (qk_tap_dance_state_t *state, void *user_data) {
+
+  if (state->count == 1) {
+    register_code(KC_LGUI);
+    register_code(KC_Z);
+  } else if (state->count == 2) {
+    register_code(KC_LSFT);
+    register_code(KC_LALT);
+    register_code(KC_LEFT);
+    register_code(KC_BSPACE);
+  } else if (state->count == 3) {
+    register_code(KC_LSFT);
+    register_code(KC_LGUI);
+    register_code(KC_Z);
+  }
+
+}
+
+void dance_undo_cmp_reset (qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    unregister_code(KC_LGUI);
+    unregister_code(KC_Z);
+  } else if (state->count == 2) {
+    unregister_code(KC_BSPACE);
+    unregister_code(KC_LSFT);
+    unregister_code(KC_LALT);
+    unregister_code(KC_LEFT);
+  }
+  else if (state->count == 3) {
+    unregister_code(KC_LSFT);
+    unregister_code(KC_LGUI);
+    unregister_code(KC_Z);
+  }
+}
+
+//All tap dance functions would go here. Only showing this one.
+qk_tap_dance_action_t tap_dance_actions[] = {
+//ACTION_TAP_DANCE_FN_ADVANCED(on_each_tap_fn, on_dance_finished_fn, on_dance_reset_fn)
+ [TD_CPX] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_cpx_finished, dance_cpx_reset),
+ [TD_UNDO_CHMP] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_undo_cmp_finished, dance_undo_cmp_reset)
+};
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic Workman layer
@@ -36,7 +118,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |  Tab   |  Q  |  D  |  R  |  W  |  B  |  [{  |           |  ]}  |  J  |  F  |  U  |  P  |  '  |   =    |
  * |--------+-----+-----+-----+-----+-----|      |           |      |-----+-----+-----+-----+-----+--------|
  * |  BSPC  |  A  |  S  |  H  |  T  |  G  |------|           |------|  Y  |  N  |  E  |  O  |  I  |   ;    |
- * |--------+-----+-----+-----+-----+-----|Enter |           |Enter |-----+-----+-----+-----+-----+--------|
+ * |--------+-----+-----+-----+-----+-----| LAlt |           | RAlt |-----+-----+-----+-----+-----+--------|
  * | LGUI   |  Z  |  X  |  M  |  C  |  V  |      |           |      |  K  |  L  |  ,  |  .  |  /  |  RGui  | 
  * `--------+-----+-----+-----+-----+------------'           `------------+-----+-----+-----+-----+--------'
  *   |LShft |LCtrl|  `  |  \  |  -  |                                     |Hyper| Pgup|PgDn |RCtrl|Lshft|
@@ -45,7 +127,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                   |Lprog|LNum  |          | Left |Right|
  *                              ,----|-----|------|          |------+-----+-----.
  *                             |    |      | Home |          | Up   |     |     |
- *                            |Space|LAlt  |------|          |------|Ralt |Space|
+ *                            |Space|Enter |------|          |------|Enter|Space|
  *                             |    |      | End  |          | Down |     |     |
  *                              `-----------------'          `------------------'
  */
@@ -54,23 +136,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_ESC,       KC_1,    KC_2,    KC_3,    KC_4,     KC_5,            TG(_UTILITY),
   KC_TAB,       KC_Q,    KC_D,    KC_R,    KC_W,     KC_B,            KC_LBRACKET,
   KC_BSPACE,    KC_A,    KC_S,    KC_H,    KC_T,     KC_G,
-  OSM(MOD_LGUI),KC_Z,    KC_X,    KC_M,    KC_C,     KC_V,            KC_ENTER,
+  KC_LGUI,      KC_Z,    KC_X,    KC_M,    KC_C,     KC_V,            KC_LALT,
   KC_LSPO,      KC_LCTL, KC_GRV,  KC_BSLS, KC_MINUS,
 
                                                    TG(_PROGRAMMER), TG(_NUM),
                                                                     KC_HOME,
-                                         KC_SPACE, KC_LALT,         KC_END,
+                                         KC_SPACE, KC_ENTER,        KC_END,
 
   // right hand
   TG(_UTILITY),KC_6, KC_7,            KC_8,    KC_9,    KC_0,     KC_MINUS,
   KC_RBRACKET, KC_J, KC_F,            KC_U,    KC_P,    KC_QUOT,  KC_EQUAL,
                KC_Y, KC_N,            KC_E,    KC_O,    KC_I,     KC_SCOLON,
-  KC_ENTER,    KC_K, KC_L,            KC_COMM, KC_DOT,  KC_SLASH, KC_RGUI,
+  KC_RALT,     KC_K, KC_L,            KC_COMM, KC_DOT,  KC_SLASH, KC_RGUI,
                      KC_KP_ASTERISK,  KC_PGUP, KC_PGDN, KC_RCTL,  KC_RSPC,
 
   KC_LEFT, KC_RIGHT,
   KC_UP,
-  KC_DOWN, KC_RALT, KC_SPACE
+  KC_DOWN, KC_ENTER, KC_SPACE
 ),
 
 /* Programmer
@@ -89,9 +171,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                       ,-------------.           ,-------------.
  *                                       |      | CLIP |           |      |      |
  *                                ,------|------|------|           |------+------+------.
- *                                |      |      |      |           |      |      |      |
+ *                                |      |      | C/P/X|           |      |      |      |
  *                                |      |      |------|           |------|      |      |
- *                                |      |      |      |           |      |      |      |
+ *                                |      |      | U/CMP|           |      |      |      |
  *                                `--------------------'           `--------------------'
  */
 [_PROGRAMMER] = LAYOUT_ergodox(
@@ -103,8 +185,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TRNS, KC_TRNS, KC_TILD, KC_TRNS, KC_TRNS,
 
                                                KC_TRNS, LGUI(KC_M),
-                                                        KC_TRNS,
-                                      KC_TRNS, KC_TRNS, KC_TRNS,
+                                                        TD(TD_CPX),
+                                      KC_TRNS, KC_TRNS, TD(TD_UNDO_CHMP),
 
   // right hand
   KC_TRNS, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TRNS,
