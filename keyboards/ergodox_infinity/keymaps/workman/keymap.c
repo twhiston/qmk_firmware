@@ -36,11 +36,11 @@ char *layerNames[] = {
 // cmd+z / select previous and delete / shift+cmd+z
 enum {
  TD_CPX = 0,
- TD_UNDO_CHMP
+ TD_UNDO_CHMP,
+ TD_PGRM_ENT
 };
 
 void dance_cpx_finished (qk_tap_dance_state_t *state, void *user_data) {
-
   if (state->count == 1) {
     register_code(KC_LGUI);
     register_code(KC_C);
@@ -67,7 +67,6 @@ void dance_cpx_reset (qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void dance_undo_cmp_finished (qk_tap_dance_state_t *state, void *user_data) {
-
   if (state->count == 1) {
     register_code(KC_LGUI);
     register_code(KC_Z);
@@ -101,11 +100,33 @@ void dance_undo_cmp_reset (qk_tap_dance_state_t *state, void *user_data) {
   }
 }
 
+void dance_pgent_finished (qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    register_code(KC_LGUI);
+    register_code(KC_RIGHT);
+    register_code(KC_ENTER);
+  } else if (state->count == 2) {
+    SEND_STRING(SS_LCTRL("a")SS_LCTRL("k")SS_TAP(X_BSPACE));
+  }
+
+}
+void dance_pgent_reset (qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    unregister_code(KC_LGUI);
+    unregister_code(KC_RIGHT);
+    unregister_code(KC_ENTER);
+  } else if (state->count == 2) {
+
+
+  }
+}
+
 //All tap dance functions would go here. Only showing this one.
 qk_tap_dance_action_t tap_dance_actions[] = {
 //ACTION_TAP_DANCE_FN_ADVANCED(on_each_tap_fn, on_dance_finished_fn, on_dance_reset_fn)
  [TD_CPX] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_cpx_finished, dance_cpx_reset),
- [TD_UNDO_CHMP] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_undo_cmp_finished, dance_undo_cmp_reset)
+ [TD_UNDO_CHMP] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_undo_cmp_finished, dance_undo_cmp_reset),
+ [TD_PGRM_ENT] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_pgent_finished, dance_pgent_reset)
 };
 
 
@@ -173,7 +194,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                       |      | CLIP |           |      | CDFMT|
  *                                ,------|------|------|           |------+------+------.
  *                                |      |      | C/P/X|           |LGUI[ |      |      |
- *                                |      |      |------|           |------|      |      |
+ *                                |      |      |------|           |------|EOL/ENT|      |
  *                                |      |      | U/CMP|           |LGUI] |      |      |
  *                                `--------------------'           `--------------------'
  */
@@ -199,7 +220,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   KC_TRNS,       LGUI(LALT(KC_L)),
   LGUI(KC_LBRC),
-  LGUI(KC_RBRC), KC_TRNS, KC_TRNS
+  LGUI(KC_RBRC), TD(TD_PGRM_ENT), KC_TRNS
 ),
 
 /* Function
