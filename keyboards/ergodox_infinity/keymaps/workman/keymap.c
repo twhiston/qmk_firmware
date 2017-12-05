@@ -127,7 +127,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                   |Lprog|LNum  |          | hyper|Rctrl|
  *                              ,----|-----|------|          |------+-----+-----.
  *                             |    |      | Home |          | pgup  |     |     |
- *                            |Space|Enter |------|          |-------|Enter|Space|
+ *
+ *                           |Space|Enter |------|          |-------|Enter|Space|
  *                             |    |      | End  |          | pgdwn |     |     |
  *                              `-----------------'          `------------------'
  */
@@ -158,7 +159,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Programmer
  *
  * ,---------------------------------------------------.           ,--------------------------------------------------.
- * |         |  !   |  @   |  £   |  $   |  %   |ChtSht|           |      |  ^   |  &   |  *   |  (   |  )   |        |
+ * |         |  !   |  @   |  #   |  $   |  %   |ChtSht|           |      |  ^   |  &   |  *   |  (   |  )   |        |
  * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
  * |         |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -166,27 +167,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * |         |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * `---------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |       |      |  ~   |      |      |                                       |      |      |      |      |      |
+ *   |       |      |      |      |      |                                       |      |      |      |      |      |
  *   `-----------------------------------'                                       `----------------------------------'
  *                                       ,-------------.           ,-------------.
  *                                       |      | CLIP |           |      | CDFMT|
  *                                ,------|------|------|           |------+------+------.
- *                                |      |      | C/P/X|           |      |      |      |
+ *                                |      |      | C/P/X|           |LGUI[ |      |      |
  *                                |      |      |------|           |------|      |      |
- *                                |      |      | U/CMP|           |      |      |      |
+ *                                |      |      | U/CMP|           |LGUI] |      |      |
  *                                `--------------------'           `--------------------'
  */
 [_PROGRAMMER] = LAYOUT_ergodox(
   // left hand
-  KC_TRNS, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, LSFT(LGUI(KC_SLASH)),
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TILD, KC_TRNS, KC_TRNS,
+  KC_TRNS, KC_EXLM, KC_AT,   LALT(KC_3),  KC_DLR,  KC_PERC, LSFT(LGUI(KC_SLASH)),
+  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,     KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,     KC_TRNS, KC_TRNS,
+  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,     KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,     KC_TRNS,
 
-                                               KC_TRNS, LGUI(KC_M),
-                                                        TD(TD_CPX),
-                                      KC_TRNS, KC_TRNS, TD(TD_UNDO_CHMP),
+                                                   KC_TRNS, LGUI(KC_M),
+                                                            
+                                                            TD(TD_CPX),
+                                          KC_TRNS, KC_TRNS, TD(TD_UNDO_CHMP),
 
   // right hand
   KC_TRNS, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TRNS,
@@ -195,9 +197,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
 
-  KC_TRNS, LGUI(LALT(KC_L)),
-  KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS
+  KC_TRNS,       LGUI(LALT(KC_L)),
+  LGUI(KC_LBRC),
+  LGUI(KC_RBRC), KC_TRNS, KC_TRNS
 ),
 
 /* Function
