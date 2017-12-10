@@ -37,7 +37,8 @@ char *layerNames[] = {
 enum {
  TD_CPX = 0,
  TD_UNDO_CHMP,
- TD_PGRM_ENT
+ TD_PGRM_ENT,
+ TD_SPC_ENTER
 };
 
 void dance_cpx_finished (qk_tap_dance_state_t *state, void *user_data) {
@@ -126,7 +127,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 //ACTION_TAP_DANCE_FN_ADVANCED(on_each_tap_fn, on_dance_finished_fn, on_dance_reset_fn)
  [TD_CPX] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_cpx_finished, dance_cpx_reset),
  [TD_UNDO_CHMP] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_undo_cmp_finished, dance_undo_cmp_reset),
- [TD_PGRM_ENT] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_pgent_finished, dance_pgent_reset)
+ [TD_PGRM_ENT] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_pgent_finished, dance_pgent_reset),
+ [TD_SPC_ENTER]  = ACTION_TAP_DANCE_DOUBLE(KC_SPACE, KC_ENTER)
 };
 
 
@@ -142,14 +144,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+-----+-----+-----+-----+-----| LAlt |           | RAlt |-----+-----+-----+-----+-----+--------|
  * | LGUI   |  Z  |  X  |  M  |  C  |  V  |      |           |      |  K  |  L  |  ,  |  .  |  /  |  RGui  | 
  * `--------+-----+-----+-----+-----+------------'           `------------+-----+-----+-----+-----+--------'
- *   |LShft |LCtrl|  `  |  \  |  -  |                                     |Left |  Up | Dwn |Right|Rshft|
+ *   |LShft |LCtrl|  `  |  \  |  -  |                                     | l   |  Up | Dwn | r   |Rshft|
  *   `------------------------------'                                     `-----------------------------'
  *                                   ,------------.          ,------------.                  
  *                                   |Lprog|LNum  |          | hyper|Rctrl|
  *                              ,----|-----|------|          |------+-----+-----.
  *                             |    |      | Home |          | pgup  |     |     |
- *
- *                           |Space|Enter |------|          |-------|Enter|Space|
+ *                          |spc/ent|Left  |------|          |-------|Right|spc/ent|
  *                             |    |      | End  |          | pgdwn |     |     |
  *                              `-----------------'          `------------------'
  */
@@ -163,7 +164,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
                                                    TG(_PROGRAMMER), TG(_NUM),
                                                                     KC_HOME,
-                                         KC_SPACE, KC_ENTER,        KC_END,
+                                         TD(TD_SPC_ENTER), KC_LEFT, KC_END,
 
   // right hand
   TG(_UTILITY),   KC_6, KC_7,    KC_8,    KC_9,    KC_0,     KC_MINUS,
@@ -174,7 +175,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   KC_KP_ASTERISK, KC_RSPC,
   KC_PGUP,
-  KC_PGDN, KC_ENTER, KC_SPACE
+  KC_PGDN, KC_RIGHT, TD(TD_SPC_ENTER)
 ),
 
 /* Programmer
