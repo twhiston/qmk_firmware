@@ -14,8 +14,11 @@ enum custom_layers {
 enum custom_keycodes {
   PLACEHOLDER = SAFE_RANGE, // can always be here
   EPRM,
-  VRSN
+  VRSN,
+  DYNAMIC_MACRO_RANGE
 };
+
+#include "dynamic_macro.h"
 
 
 char *layerNames[] = {
@@ -35,33 +38,28 @@ char *layerNames[] = {
 // TD_UNDO_CHMP
 // cmd+z / select previous and delete / shift+cmd+z
 enum {
- TD_CPX = 0,
+ TD_CX = 0,
  TD_UNDO_CHMP,
  TD_PGRM_ENT,
- TD_SPC_ENTER
+ TD_SPC_ENTER,
+ TD_M1_REC
 };
 
-void dance_cpx_finished (qk_tap_dance_state_t *state, void *user_data) {
+void dance_cx_finished (qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
     register_code(KC_LGUI);
     register_code(KC_C);
   } else if (state->count == 2)  {
     register_code(KC_LGUI);
-    register_code(KC_V);
-  } else if (state->count == 3)  {
-    register_code(KC_LGUI);
     register_code(KC_X);
   }
 }
 
-void dance_cpx_reset (qk_tap_dance_state_t *state, void *user_data) {
+void dance_cx_reset (qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
     unregister_code(KC_LGUI);
     unregister_code(KC_C);
-  } else if (state->count == 2) {
-    unregister_code(KC_LGUI);
-    unregister_code(KC_V);
-  } else if (state->count == 3)  {
+  } else if (state->count == 2)  {
     unregister_code(KC_LGUI);
     unregister_code(KC_X);
   }
@@ -116,16 +114,13 @@ void dance_pgent_reset (qk_tap_dance_state_t *state, void *user_data) {
     unregister_code(KC_LGUI);
     unregister_code(KC_RIGHT);
     unregister_code(KC_ENTER);
-  } else if (state->count == 2) {
-
-
-  }
+  } else if (state->count == 2) {}
 }
 
 //All tap dance functions would go here. Only showing this one.
 qk_tap_dance_action_t tap_dance_actions[] = {
 //ACTION_TAP_DANCE_FN_ADVANCED(on_each_tap_fn, on_dance_finished_fn, on_dance_reset_fn)
- [TD_CPX] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_cpx_finished, dance_cpx_reset),
+ [TD_CX] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_cx_finished, dance_cx_reset),
  [TD_UNDO_CHMP] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_undo_cmp_finished, dance_undo_cmp_reset),
  [TD_PGRM_ENT] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_pgent_finished, dance_pgent_reset),
  [TD_SPC_ENTER]  = ACTION_TAP_DANCE_DOUBLE(KC_SPACE, KC_ENTER)
@@ -147,7 +142,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *   |[/LGUI|     |  `  |  \  |  -  |                                     | l   |  Up | Dwn | r   |]/RGUI|
  *   `------------------------------'                                     `------------------------------'
  *                                   ,------------.          ,------------.                  
- *                                   |     |      |          | hyper|     |
+ *                                   |C/P/X|Paste |          | hyper|     |
  *                              ,----|-----|------|          |------+-----+-----.
  *                             |    |      | Home |          | pgup  |     |     |
  *                          |spc/ent|LyProg|------|          |-------|LyFun| ent |
@@ -156,18 +151,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_WORKMAN] = LAYOUT_ergodox(
   // left hand
-  KC_ESC,                    KC_1,  KC_2,   KC_3,    KC_4,     KC_5, TG(_UTILITY),
+  KC_ESC,                    KC_1,  KC_2,   KC_3,    KC_4,     KC_5, MO(_UTILITY),
   KC_TAB,                    KC_Q,  KC_D,   KC_R,    KC_W,     KC_B, KC_LALT,
   KC_BSPACE,                 KC_A,  KC_S,   KC_H,    KC_T,     KC_G,
   KC_LSPO,                   KC_Z,  KC_X,   KC_M,    KC_C,     KC_V, KC_LCTRL,
   MT(MOD_LGUI, KC_LBRACKET), KC_NO, KC_GRV, KC_BSLS, KC_MINUS,
 
-                                                              KC_NO,           KC_NO,
+                                                              TD(TD_CX),       LGUI(KC_V),
                                                                                KC_HOME,
                                             TD(TD_SPC_ENTER), TG(_PROGRAMMER), KC_END,
 
   // right hand
-  TG(_UTILITY),   KC_6,   KC_7,    KC_8,    KC_9,    KC_0,     KC_MINUS,
+  MO(_UTILITY),   KC_6,   KC_7,    KC_8,    KC_9,    KC_0,     KC_MINUS,
   KC_RALT,        KC_J,   KC_F,    KC_U,    KC_P,    KC_QUOT,  KC_EQUAL,
                   KC_Y,   KC_N,    KC_E,    KC_O,    KC_I,     KC_SCOLON,
   KC_RCTRL,       KC_K,   KC_L,    KC_COMM, KC_DOT,  KC_SLASH, KC_RSPC,
@@ -181,7 +176,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Programmer
  *
  * ,---------------------------------------------------.           ,--------------------------------------------------.
- * |         |  !   |  @   |  #   |  $   |  %   |ChtSht|           |      |  ^   |  &   |  *   |  (   |  )   |        |
+ * |         |  !   |  @   |  #   |  $   |  %   |ChtSht|           | CLIP |  ^   |  &   |  *   |  (   |  )   |        |
  * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
  * |         |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -192,9 +187,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *   |       |      |      |      |      |                                       |      |      |      |      |      |
  *   `-----------------------------------'                                       `----------------------------------'
  *                                       ,-------------.           ,-------------.
- *                                       |      | CLIP |           |      | CDFMT|
+ *                                       |      |      |           |      | CDFMT|
  *                                ,------|------|------|           |------+------+-------.
- *                                |      |      | C/P/X|           |LGUI[ |      |       |
+ *                                |      |      |      |           |LGUI[ |      |       |
  *                                |      |      |------|           |------|      |EOL/ENT|
  *                                |      |      | U/CMP|           |LGUI] |      |       |
  *                                `--------------------'           `---------------------'
@@ -207,21 +202,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,     KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,     KC_TRNS,
 
-                                                   KC_TRNS, LGUI(KC_M),
+                                                   KC_TRNS, KC_TRNS,
                                                             
-                                                            TD(TD_CPX),
+                                                            KC_NO,
                                           KC_TRNS, KC_TRNS, TD(TD_UNDO_CHMP),
 
   // right hand
-  KC_TRNS, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-           KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-                    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  LGUI(KC_M), KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TRNS,
+  KC_TRNS,    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+              KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+  KC_TRNS,    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
 
   KC_TRNS,       LGUI(LALT(KC_L)),
   LGUI(KC_LBRC),
-  LGUI(KC_RBRC), TD(TD_PGRM_ENT), KC_TRNS
+  LGUI(KC_RBRC), KC_TRNS, TD(TD_PGRM_ENT)
 ),
 
 /* Function
@@ -247,7 +242,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_FUNCTION] = LAYOUT_ergodox(
   // left hand
-  KC_F11, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,    KC_TRNS,
+  KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,    KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
@@ -258,7 +253,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                       KC_TRNS, KC_TRNS, KC_TRNS,
 
   // right hand
-  KC_TRNS,  KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,
+  KC_TRNS, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
            KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
@@ -272,7 +267,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Utility
  *
  * ,---------------------------------------------------.           ,--------------------------------------------------.
- * | Version |      |      |      |      |      | Util |           | Util |      |      |      |      |      |        |
+ * | Version |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
  * |         |      |      |      |      |BL_INC|      |           |      |BL_INC|      |      |      |      |        |
  * |---------+------+------+------+------+------| RESET|           |RESET |------+------+------+------+------+--------|
@@ -292,7 +287,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_UTILITY] = LAYOUT_ergodox(
   // left hand
-  VRSN,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,   TG(_UTILITY),
+  VRSN,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,   KC_NO,
   KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, BL_INC,  RESET,
   KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, BL_DEC,
   KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, BL_TOGG, DEBUG,
@@ -303,11 +298,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                               KC_NO, KC_NO,   KC_NO,
 
   // right hand
-  TG(_UTILITY), KC_NO,   KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-  RESET,        BL_INC,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                BL_DEC,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-  DEBUG,        BL_TOGG, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+  KC_NO, KC_NO,   KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+  RESET, BL_INC,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+         BL_DEC,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+  DEBUG, BL_TOGG, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+                  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
 
   KC_NO, KC_NO,
   KC_NO,
@@ -377,7 +372,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true;
 };
-
 /**
  * Runs just one time when the keyboard initializes.
  */
@@ -402,7 +396,7 @@ void matrix_scan_user(void) {
       case _PROGRAMMER:
         ergodox_right_led_2_on();
       break;
-      case _NUM:
+      case _FUNCTION:
         ergodox_board_led_off();
       break;
       case _UTILITY:
