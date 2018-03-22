@@ -131,15 +131,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic Workman layer
  *
  * ,---------------------------------------------.           ,--------------------------------------------.
- * |   Esc    |  1  |  2  |  3  |  4  |  5  |Util|           | Util |  6  |  7  |  8  |  9  |  0  |   -    |
+ * |   Esc    |  1  |  2  |  3  |  4  |  5 |Util |           | Util |  6  |  7  |  8  |  9  |  0  |   -    |
  * |--------+-----+-----+-----+-----+------------|           |------+-----+-----+-----+-----+-----+--------|
  * |  Tab   |  Q  |  D  |  R  |  W  |  B  | LAlt |           | RAlt |  J  |  F  |  U  |  P  |  '  |   =    |
  * |--------+-----+-----+-----+-----+-----|      |           |      |-----+-----+-----+-----+-----+--------|
  * |  BSPC  |  A  |  S  |  H  |  T  |  G  |------|           |------|  Y  |  N  |  E  |  O  |  I  |   ;    |
- * |--------+-----+-----+-----+-----+-----| LCtl |           | RCtl |-----+-----+-----+-----+-----+--------|
+ * |--------+-----+-----+-----+-----+-----| LCtl |           | ]RGUI|-----+-----+-----+-----+-----+--------|
  * | LShft/(|  Z  |  X  |  M  |  C  |  V  |      |           |      |  K  |  L  |  ,  |  .  |  /  |RShft/) | 
  * `--------+-----+-----+-----+-----+------------'           `------------+-----+-----+-----+-----+--------'
- *   |[/LGUI|     |  `  |  \  |  -  |                                     | l   |  Up | Dwn | r   |]/RGUI|
+ *   |LCtl  |[LGUI|  `  |  \  |  -  |                                     | l   |  Up | Dwn | r   |Rctl  |
  *   `------------------------------'                                     `------------------------------'
  *                                   ,------------.          ,------------.                  
  *                                   |C/P/X|Paste |          | hyper|     |
@@ -151,22 +151,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_WORKMAN] = LAYOUT_ergodox(
   // left hand
-  KC_ESC,                    KC_1,  KC_2,   KC_3,    KC_4,     KC_5, MO(_UTILITY),
-  KC_TAB,                    KC_Q,  KC_D,   KC_R,    KC_W,     KC_B, KC_LALT,
-  KC_BSPACE,                 KC_A,  KC_S,   KC_H,    KC_T,     KC_G,
-  KC_LSPO,                   KC_Z,  KC_X,   KC_M,    KC_C,     KC_V, KC_LCTRL,
-  MT(MOD_LGUI, KC_LBRACKET), KC_NO, KC_GRV, KC_BSLS, KC_MINUS,
+  KC_ESC,    KC_1,  KC_2,   KC_3,    KC_4,     KC_5, MO(_UTILITY),
+  KC_TAB,    KC_Q,  KC_D,   KC_R,    KC_W,     KC_B, KC_LALT,
+  KC_BSPACE, KC_A,  KC_S,   KC_H,    KC_T,     KC_G,
+  KC_LSPO,   KC_Z,  KC_X,   KC_M,    KC_C,     KC_V, KC_LCTRL,
+  KC_LCTRL,  MT(MOD_LGUI, KC_LBRACKET), KC_GRV, KC_BSLS, KC_MINUS,
 
                                                               TD(TD_CX),       LGUI(KC_V),
                                                                                KC_HOME,
                                             TD(TD_SPC_ENTER), TG(_PROGRAMMER), KC_END,
 
   // right hand
-  MO(_UTILITY),   KC_6,   KC_7,    KC_8,    KC_9,    KC_0,     KC_MINUS,
-  KC_RALT,        KC_J,   KC_F,    KC_U,    KC_P,    KC_QUOT,  KC_EQUAL,
-                  KC_Y,   KC_N,    KC_E,    KC_O,    KC_I,     KC_SCOLON,
-  KC_RCTRL,       KC_K,   KC_L,    KC_COMM, KC_DOT,  KC_SLASH, KC_RSPC,
-                          KC_LEFT, KC_UP,   KC_DOWN, KC_RIGHT, MT(MOD_RGUI, KC_RBRACKET),
+  MO(_UTILITY),              KC_6, KC_7,    KC_8,    KC_9,     KC_0,        KC_MINUS,
+  KC_RALT,                   KC_J, KC_F,    KC_U,    KC_P,     KC_QUOT,     KC_EQUAL,
+                             KC_Y, KC_N,    KC_E,    KC_O,     KC_I,        KC_SCOLON,
+  MT(MOD_RGUI, KC_RBRACKET), KC_K, KC_L,    KC_COMM, KC_DOT,   KC_SLASH,    KC_RSPC,
+                                   KC_LEFT, KC_UP,   KC_DOWN,  KC_RIGHT,    KC_RCTRL,
 
   KC_KP_ASTERISK, KC_NO,
   KC_PGUP,
@@ -387,7 +387,7 @@ void matrix_scan_user(void) {
 
   if (layer != oldLayer) {
     oldLayer = layer;
-    ergodox_led_all_off();
+   // ergodox_led_all_off();
     layerName = layerNames[layer];
     switch (layer) {
       case _WORKMAN:
