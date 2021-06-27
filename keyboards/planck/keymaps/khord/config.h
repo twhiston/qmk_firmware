@@ -12,7 +12,9 @@
                                 }
 #endif
 
+#ifndef LIGHT_CONFIG_H
 #define BACKLIGHT_BREATHING
+#endif
 #define TAPPING_TERM 150
 
 #define MUSIC_MASK (keycode != KC_NO)
@@ -20,9 +22,6 @@
 /*
  * MIDI options
  */
-
-/* Prevent use of disabled MIDI features in the keymap */
-//#define MIDI_ENABLE_STRICT 1
 
 /* enable basic MIDI features:
    - MIDI notes can be sent when in Music mode is on

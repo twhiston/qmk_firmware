@@ -1,14 +1,15 @@
-Copyright 2017 Christopher Courtney <drashna@live.com> @drashna
+# Overview
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-(at your option) any later version.
+This is my personal userspace file.  Most of my code exists here, as it's heavily shared.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+* [RGB Customization](readme_rgb.md)
+* [Diablo Tap Dancing](readme_tap_dance.md)
+* [Keymap Wrappers](readme_wrappers.md)
+* [Custom Function Handlers](readme_handlers.md)
+* [Secret Macros](readme_secrets.md)
+* [Custom Keycodes](readme_keycodes.md)
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+## Pro Micro Hacking
+
+See [this thread](https://www.reddit.com/r/olkb/comments/8sxgzb/replace_pro_micro_bootloader_with_qmk_dfu/) for details on how to flash QMK DFU to Pro Micros. 

@@ -21,12 +21,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config_common.h"
 
 /* USB Device descriptor parameter */
-#define VENDOR_ID       0xFEED
+#define VENDOR_ID       0x4853
 #define PRODUCT_ID      0x980C
 #define DEVICE_VER      0x0100
-#define MANUFACTURER    QMK
-#define PRODUCT         Leopold FC980C with QMK
-#define DESCRIPTION     Leopold FC980C with Hasu alternative controller using QMK
+#define MANUFACTURER    Hasu
+#define PRODUCT         FC980C
+
+/* Maximum dynamic keymap layers (constrained by EEPROM space) */
+#define DYNAMIC_KEYMAP_LAYER_COUNT 3
 
 /* key matrix size */
 #define MATRIX_ROWS 8
@@ -36,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MATRIX_COL_PINS { F5, B1, F0, F1, F4, B3, D7, D6, D4, D5, D3, D2, D1, D0 }
 // #define UNUSED_PINS
 
-#define DIODE_DIRECTION CUSTOM_MATRIX
+//#define DIODE_DIRECTION
 
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
@@ -48,25 +50,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define BACKLIGHT_PIN B7
 
 /* Set 0 if debouncing isn't needed */
-#define DEBOUNCING_DELAY  0
-#define TAPPING_TERM      175
+#define DEBOUNCE  0
+
+#define LED_NUM_LOCK_PIN B4
+#define LED_CAPS_LOCK_PIN B5
+#define LED_SCROLL_LOCK_PIN B6
 
 /* Mechanical locking support. Use KC_LCAP, KC_LNUM or KC_LSCR instead in keymap */
 // #define LOCKING_SUPPORT_ENABLE
 /* Locking resynchronize hack */
 // #define LOCKING_RESYNC_ENABLE
 
-/* key combination for command */
-#define IS_COMMAND() ( \
-    keyboard_report->mods == (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT)) \
-)
-
-
-
 /*
  * Feature disable options
  *  These options are also useful to firmware size reduction.
  */
+
+#define USE_I2C
 
 /* disable debug print */
 //#define NO_DEBUG
@@ -80,5 +80,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_ONESHOT
 //#define NO_ACTION_MACRO
 //#define NO_ACTION_FUNCTION
+
+// higher value means deeper actuation point, less sensitive
+// be careful and only make small adjustments (steps of 1 or 2).
+// too high and keys will fail to actuate. too low and keys will actuate spontaneously.
+// test all keys before further adjustment.
+// this should probably stay in the range +/-5.
+// #define ACTUATION_DEPTH_ADJUSTMENT 0
 
 #endif
