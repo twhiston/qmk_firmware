@@ -331,9 +331,8 @@ __attribute__((weak)) void st7565_task_user(void) {
         format_layer_bitmap_string(layer_buffer, 0);
         st7565_write_ln(layer_buffer, false);
 
-        // blank line
-        // format_layer_bitmap_string(layer_buffer, 16);
-        // st7565_write_ln(layer_buffer, false);
+
+        st7565_set_cursor(0, 2);
 
         if(layer_state_is(0)){
             st7565_write_ln("   workman", false);
@@ -355,7 +354,9 @@ __attribute__((weak)) void st7565_task_user(void) {
     st7565_write_raw_P(raw_logo, sizeof(raw_logo));
 }
 
-        if(layer_state_is(0)){
+    if(!st7565_is_on()){
+        ergodox_infinity_lcd_color(0, 0, 0);
+    } else if(layer_state_is(0)){
             ergodox_infinity_lcd_color(UINT16_MAX / 2, UINT16_MAX / 2, UINT16_MAX / 2);
         } else if(layer_state_is(1)){
             ergodox_infinity_lcd_color(0, 0, UINT16_MAX / 2);
