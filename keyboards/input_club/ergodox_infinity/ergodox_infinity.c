@@ -108,6 +108,7 @@ void keyboard_pre_init_kb(void) {
     keyboard_pre_init_user();
 }
 
+
 void matrix_init_kb(void) {
     // put your keyboard start-up code here
     // runs once when the firmware starts up
@@ -317,20 +318,32 @@ static void format_layer_bitmap_string(char* buffer, uint8_t offset) {
 __attribute__((weak)) void st7565_task_user(void) {
     if (is_keyboard_master()) {
         // Draw led and layer status
-        led_t leds = host_keyboard_led_state();
-        if(leds.num_lock) { st7565_write("Num ", false); }
-        if(leds.caps_lock) { st7565_write("Cap ", false); }
-        if(leds.scroll_lock) { st7565_write("Scrl ", false); }
-        if(leds.compose) { st7565_write("Com ", false); }
-        if(leds.kana) { st7565_write("Kana", false); }
-        st7565_advance_page(true);
+        // led_t leds = host_keyboard_led_state();
+        // if(leds.num_lock) { st7565_write("Num ", false); }
+        // if(leds.caps_lock) { st7565_write("Cap ", false); }
+        // if(leds.scroll_lock) { st7565_write("Scrl ", false); }
+        // if(leds.compose) { st7565_write("Com ", false); }
+        // if(leds.kana) { st7565_write("Kana", false); }
+        // st7565_advance_page(true);
 
         char layer_buffer[16 + 5];  // 3 spaces and one null terminator
         st7565_set_cursor(0, 1);
         format_layer_bitmap_string(layer_buffer, 0);
         st7565_write_ln(layer_buffer, false);
-        format_layer_bitmap_string(layer_buffer, 16);
-        st7565_write_ln(layer_buffer, false);
+
+        // blank line
+        // format_layer_bitmap_string(layer_buffer, 16);
+        // st7565_write_ln(layer_buffer, false);
+
+        if(layer_state_is(0)){
+            st7565_write_ln("   workman", false);
+        } else if(layer_state_is(1)){
+            st7565_write_ln("   modifiers", false);
+        } else if(layer_state_is(2)){
+            st7565_write_ln("   utils", false);
+        }
+
+
         st7565_write_ln("     Tom Whiston     ", false);
     } else {
     static const char PROGMEM raw_logo[] = {
@@ -341,6 +354,14 @@ __attribute__((weak)) void st7565_task_user(void) {
     };
     st7565_write_raw_P(raw_logo, sizeof(raw_logo));
 }
+
+        if(layer_state_is(0)){
+            ergodox_infinity_lcd_color(UINT16_MAX / 2, UINT16_MAX / 2, UINT16_MAX / 2);
+        } else if(layer_state_is(1)){
+            ergodox_infinity_lcd_color(0, 0, UINT16_MAX / 2);
+        } else if(layer_state_is(2)){
+            ergodox_infinity_lcd_color(UINT16_MAX / 2, 0, UINT16_MAX / 2);
+        }
 }
 #endif
 
