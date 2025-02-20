@@ -247,32 +247,53 @@ static void format_layer_bitmap_string(char* buffer, uint8_t offset) {
 __attribute__((weak)) void st7565_task_user(void) {
     if (is_keyboard_master()) {
         // Draw led and layer status
-        led_t leds = host_keyboard_led_state();
-        if(leds.num_lock) { st7565_write("Num ", false); }
-        if(leds.caps_lock) { st7565_write("Cap ", false); }
-        if(leds.scroll_lock) { st7565_write("Scrl ", false); }
-        if(leds.compose) { st7565_write("Com ", false); }
-        if(leds.kana) { st7565_write("Kana", false); }
-        st7565_advance_page(true);
+        // led_t leds = host_keyboard_led_state();
+        // if(leds.num_lock) { st7565_write("Num ", false); }
+        // if(leds.caps_lock) { st7565_write("Cap ", false); }
+        // if(leds.scroll_lock) { st7565_write("Scrl ", false); }
+        // if(leds.compose) { st7565_write("Com ", false); }
+        // if(leds.kana) { st7565_write("Kana", false); }
+        // st7565_advance_page(true);
 
         char layer_buffer[16 + 5];  // 3 spaces and one null terminator
         st7565_set_cursor(0, 1);
         format_layer_bitmap_string(layer_buffer, 0);
         st7565_write_ln(layer_buffer, false);
-        format_layer_bitmap_string(layer_buffer, 16);
-        st7565_write_ln(layer_buffer, false);
-        st7565_write_ln("  1=On    D=Default", false);
+        // format_layer_bitmap_string(layer_buffer, 16);
+        // st7565_write_ln(layer_buffer, false);
+        if(layer_state_is(0)){
+            st7565_write_ln("   workman", false);
+        } else if(layer_state_is(1)){
+            st7565_write_ln("   modifiers", false);
+        } else if(layer_state_is(2)){
+            st7565_write_ln("   utils", false);
+        }else if(layer_state_is(3)){
+            st7565_write_ln("   winBLOWS", false);
+        }
+        //st7565_write_ln("  1=On    D=Default", false);
+        st7565_write_ln("     Tom Whiston     ", false);
+
     } else {
         // Draw logo
-        static const char qmk_logo[] = {
-            0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F, 0x90, 0x91, 0x92, 0x93, 0x94,
-            0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xAB, 0xAC, 0xAD, 0xAE, 0xAF, 0xB0, 0xB1, 0xB2, 0xB3, 0xB4,
-            0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF, 0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0x00
+        static const char PROGMEM raw_logo[] = {
+            0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  2,  6, 14, 14, 30, 60,124,252,252,252,248,248,248,248,248,248,240,240,240,240,240,224,224,224,224,224,224,192,192,192,192,192,128,128,128,128,128,128,128,128,128,192,192,192,192,192,192,224,224,224,224,224,224,240,240,240,240,240,248,248,248,248,248,248,252,252,252,252,124, 60, 30, 14, 14,  6,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+            0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,128,128,128,128,128,128,192,192,192,192,192,192,225,227,231,239,239,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,247,247,  7,  7,247,247,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,239,231,231,227,225,192,192,192,192,192,128,128,128,128,128,128,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+            0,  0,  0,  0,  0,  0,  8, 12, 12, 12, 12, 12, 12, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,  7,  7,  7,  7,  7,135,135,135,199,199,231,231,231,231,231,231,231,239,239,255,255,255,255,255,255,255,255,255,255,255,255,193, 15,255, 63,128,128,127,255,  7,193,255,255,255,255,255,255,255,255,255,255,255,255,255,239,239,239,239,239,239,239,239,239,239,239,239,207,207,143, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 12, 12, 12, 12, 12, 12,  8,  8,  8,  0,  0,  0,  0,
+            0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,254,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,224,129,240,255,255,224,131,240,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,224,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
         };
-
-        st7565_write(qmk_logo, false);
-        st7565_write("  Infinity  Ergodox  ", false);
+        st7565_write_raw_P(raw_logo, sizeof(raw_logo));
+        //st7565_write("  Infinity  Ergodox  ", false);
     }
+    if(layer_state_is(0)){
+        ergodox_infinity_lcd_color(UINT16_MAX / 2, UINT16_MAX / 2, UINT16_MAX / 2);
+    } else if(layer_state_is(1)){
+        ergodox_infinity_lcd_color(0, 0, UINT16_MAX / 2);
+    } else if(layer_state_is(2)){
+        ergodox_infinity_lcd_color(UINT16_MAX / 2, 0, UINT16_MAX / 2);
+    } else if(layer_state_is(3)){
+        ergodox_infinity_lcd_color(UINT16_MAX /2, 0, 0);
+    }
+
 }
 #endif
 
